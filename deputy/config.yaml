@@ -1,0 +1,50 @@
+name: "Deputy"
+version: 0.2.0
+slug: "deputy"
+description: "WANTED control plane — manage Sheriff edge devices, with HA MQTT Discovery"
+url: "https://gitlab.com/mekops/wanted/deputy"
+arch:
+  - aarch64
+  - amd64
+startup: services
+boot: auto
+init: false
+
+# Twin database, layer cache, and the persisted signing seed live in /data
+# (the Supervisor's per-add-on persistent volume)
+
+services:
+  - mqtt:want
+
+# Sheriff devices on the LAN talk to the device-protocol port (direct-CBOR
+# framing);
+ports:
+  8081/tcp: 8081
+
+ports_description:
+  8080/tcp: "REST API (and web UI via ingress)"
+  8081/tcp: "Sheriff device protocol (direct CBOR)"
+
+# The web UI rides the HTTP listener; ingress serves it in the HA sidebar.
+ingress: true
+ingress_port: 8080
+panel_icon: "mdi:police-badge"
+panel_title: "Deputy"
+
+options:
+  sync_interval_s: 60
+  oci_insecure: false
+
+schema:
+  # Device reconciliation cadence pushed in every desired state.
+  sync_interval_s: int(1,3600)
+  # Allow plain-HTTP OCI registries (local registries without TLS).
+  oci_insecure: bool
+  # Hex Ed25519 seed (64 chars). Leave unset to auto-generate once and persist
+  # in /data — the derived pubkey must stay stable or provisioned devices
+  # reject every desired state.
+  signing_seed: password?
+  # OCI registry credentials for image resolution and layer pre-caching.
+  oci_username: str?
+  oci_password: password?
+  oci_bearer: password?
