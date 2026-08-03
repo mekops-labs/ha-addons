@@ -38,3 +38,8 @@ public key must stay stable or provisioned devices reject every desired state.
 | `oci_insecure`                                 | `false`       | Allow plain-HTTP OCI registries
 | `signing_seed`                                 | *(generated)* | Hex Ed25519 seed (64 chars)
 | `oci_username` / `oci_password` / `oci_bearer` | —             | OCI registry credentials
+| `mqtt_broker`                                  | —             | Self-hosted MQTT broker URL (e.g. `tcp://host:1883`), overriding the internal Home Assistant MQTT service
+| `mqtt_username` / `mqtt_password`              | —             | Credentials for `mqtt_broker` (the internal service's credentials are injected automatically instead)
+| `mqtt_client_id`                                | `deputy`      | MQTT client id — give each Deputy its own when several share a broker
+| `mqtt_ca_cert`                                  | —             | PEM bundle verifying the broker certificate, for a broker behind a private CA
+| `mqtt_insecure`                                 | `false`       | Accept any broker certificate (lab use only)

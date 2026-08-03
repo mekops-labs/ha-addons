@@ -34,6 +34,8 @@ panel_title: "Deputy"
 options:
   sync_interval_s: 60
   oci_insecure: false
+  mqtt_client_id: "deputy"
+  mqtt_insecure: false
 
 schema:
   # Device reconciliation cadence pushed in every desired state.
@@ -48,3 +50,18 @@ schema:
   oci_username: str?
   oci_password: password?
   oci_bearer: password?
+  # Self-hosted MQTT broker (e.g. tcp://host:1883), overriding the internal
+  # Home Assistant MQTT service auto-discovery below. Leave unset to use the
+  # Mosquitto broker add-on instead.
+  mqtt_broker: str?
+  mqtt_username: str?
+  mqtt_password: password?
+  # Give each Deputy its own client id when several share a broker (defaults
+  # to a fixed id, which a second connection would evict from the broker).
+  mqtt_client_id: str?
+  # PEM bundle verifying the broker certificate, for a broker behind a
+  # private CA. Unset uses the system trust store.
+  mqtt_ca_cert: str?
+  # Accept any broker certificate. Lab use only — this drops the guarantee
+  # that the broker is the one intended.
+  mqtt_insecure: bool

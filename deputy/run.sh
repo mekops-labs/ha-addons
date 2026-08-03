@@ -20,14 +20,37 @@ else
 fi
 ARGS+=(--signing-seed "${SEED}")
 
-# --- Auto-discover the Home Assistant MQTT broker (Discovery + commands) ---
-if bashio::services.available 'mqtt'; then
+# --- MQTT broker: an explicit mqtt_broker option overrides the internal
+# Home Assistant MQTT service auto-discovery (e.g. a self-hosted EMQX) ---
+if bashio::config.has_value 'mqtt_broker'; then
+    bashio::log.info "Custom MQTT broker configured — enabling MQTT Discovery."
+    ARGS+=(--mqtt-broker "$(bashio::config 'mqtt_broker')")
+    if bashio::config.has_value 'mqtt_username'; then
+        export DEPUTY_MQTT_USERNAME="$(bashio::config 'mqtt_username')"
+    fi
+    if bashio::config.has_value 'mqtt_password'; then
+        export DEPUTY_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
+    fi
+elif bashio::services.available 'mqtt'; then
     bashio::log.info "Home Assistant MQTT service discovered — enabling MQTT Discovery."
     export DEPUTY_MQTT_USERNAME="$(bashio::services mqtt 'username')"
     export DEPUTY_MQTT_PASSWORD="$(bashio::services mqtt 'password')"
     ARGS+=(--mqtt-broker "tcp://$(bashio::services mqtt 'host'):$(bashio::services mqtt 'port')")
 else
     bashio::log.warning "No internal MQTT service found — MQTT Discovery disabled. Install the Mosquitto broker add-on to enable it."
+fi
+
+if bashio::config.has_value 'mqtt_client_id'; then
+    ARGS+=(--mqtt-client-id "$(bashio::config 'mqtt_client_id')")
+fi
+if bashio::config.has_value 'mqtt_ca_cert'; then
+    CA_FILE=/data/mqtt-ca.pem
+    bashio::config 'mqtt_ca_cert' > "${CA_FILE}"
+    chmod 600 "${CA_FILE}"
+    ARGS+=(--mqtt-ca-file "${CA_FILE}")
+fi
+if bashio::config.true 'mqtt_insecure'; then
+    ARGS+=(--mqtt-insecure)
 fi
 
 # --- Options ---
