@@ -1,5 +1,5 @@
 name: "Deputy"
-version: 0.4.1
+version: 0.5.0
 slug: "deputy"
 description: "WANTED control plane — manage Sheriff edge devices, with HA MQTT Discovery"
 url: "https://gitlab.com/mekops/wanted/deputy"

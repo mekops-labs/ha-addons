@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 (2026-08-09)
+
+- A layer past 24 KiB is delivered as frames following its delivery message.
+  A device with no registry socket can receive a layer of any size.
+- A device id must be `[A-Za-z0-9_-]` and at most 64 bytes, refused at the
+  device port and on every push. One under another id stops reporting.
+
 ## 0.4.1 (2026-08-09)
 
 - bumped sheriff-proro to v0.5.1
