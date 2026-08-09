@@ -15,8 +15,27 @@ delivery) and integrates them into Home Assistant via MQTT Discovery.
   sensors (wapps running, RAM free, last seen); HA automations can push
   deployments via the `deputy/devices/<id>/set` command topic. Credentials for
   the MQTT broker add-on are injected automatically.
-- **Persistent state in `/data`** — twin database (SQLite), layer cache, and
-  the Ed25519 signing seed.
+- **Persistent state in `/data`** — twin database (SQLite), layer cache, the
+  Ed25519 signing seed, and the API token.
+
+## Reaching the API from outside the sidebar
+
+The sidebar needs no credential: the Supervisor authenticates you and Deputy
+honours that. Everything else does.
+
+Port `8080` is **declared but unmapped**. Map it in the add-on's Network panel
+to drive this Deputy from a workstation CLI or a CI job — that publishes the
+whole control plane, so it is deliberately a decision you make rather than a
+default.
+
+The token comes from the `api_token` option, or is generated once into
+`/data/api.token` and logged at startup. Use it as:
+
+```sh
+export DEPUTY_SERVER=http://homeassistant.local:8080
+export DEPUTY_TOKEN=<the token from the add-on log>
+deputy device list
+```
 
 ## Provisioning devices
 

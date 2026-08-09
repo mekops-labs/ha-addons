@@ -17,12 +17,15 @@ services:
   - mqtt:want
 
 # Sheriff devices on the LAN talk to the device-protocol port (direct-CBOR
-# framing);
+# framing). The REST API is declared but left unmapped: the sidebar reaches it
+# through ingress, and publishing it is an opt-in that hands the whole control
+# plane to whoever holds the api_token.
 ports:
+  8080/tcp: null
   8081/tcp: 8081
 
 ports_description:
-  8080/tcp: "REST API (and web UI via ingress)"
+  8080/tcp: "REST API — unmapped by default; map it to drive this Deputy from a CLI or CI, and note the api_token"
   8081/tcp: "Sheriff device protocol (direct CBOR)"
 
 # The web UI rides the HTTP listener; ingress serves it in the HA sidebar.
@@ -46,6 +49,10 @@ schema:
   # in /data — the derived pubkey must stay stable or provisioned devices
   # reject every desired state.
   signing_seed: password?
+  # Bearer token for the REST API. Leave unset to auto-generate one into
+  # /data and log it at startup; the sidebar never needs it, a CLI or CI
+  # pushing to a mapped 8080 does.
+  api_token: password?
   # OCI registry credentials for image resolution and layer pre-caching.
   oci_username: str?
   oci_password: password?

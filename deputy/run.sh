@@ -20,6 +20,23 @@ else
 fi
 ARGS+=(--signing-seed "${SEED}")
 
+# --- API token: configured, or generate once and persist in /data ---
+# Deputy refuses to serve its API on a published address without one, and the
+# add-on must publish :8080 for ingress to reach it. The sidebar never needs
+# the token (the Supervisor authenticates the user); a CLI or CI does.
+TOKEN_FILE=/data/api.token
+if bashio::config.has_value 'api_token'; then
+    export DEPUTY_TOKEN="$(bashio::config 'api_token')"
+else
+    if [ ! -f "${TOKEN_FILE}" ]; then
+        bashio::log.warning "No api_token configured — generating one into ${TOKEN_FILE}."
+        head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n' > "${TOKEN_FILE}"
+        chmod 600 "${TOKEN_FILE}"
+    fi
+    export DEPUTY_TOKEN="$(cat "${TOKEN_FILE}")"
+    bashio::log.info "API token: ${DEPUTY_TOKEN} — needed only to reach the API from outside the sidebar."
+fi
+
 # --- MQTT broker: an explicit mqtt_broker option overrides the internal
 # Home Assistant MQTT service auto-discovery (e.g. a self-hosted EMQX) ---
 if bashio::config.has_value 'mqtt_broker'; then
