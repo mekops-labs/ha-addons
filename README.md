@@ -11,6 +11,17 @@ For add-on-specific details, see the README in each add-on's directory:
 - [`siphon/README.md`](siphon/README.md)
 - [`deputy/README.md`](deputy/README.md)
 
+## Releasing
+
+Each add-on versions independently: the Supervisor reads `version:` from its
+`config.yaml`, and a release is tagged here as `<slug>-v<version>` — `deputy-v0.3.0`,
+`siphon-v0.5.4-1`. The slug prefix is what keeps two add-ons' releases apart in
+one repository, and the tag is on the commit that raised `version:`.
+
+An add-on's version tracks the upstream project it packages, so `deputy-v0.3.0`
+carries Deputy `v0.3.0`. The upstream tag lives in the upstream repository; this
+one marks the packaging.
+
 ---
 
 ## 🚀 Installation
