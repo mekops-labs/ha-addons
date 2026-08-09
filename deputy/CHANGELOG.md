@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 (2026-08-09)
+
+- bumped sheriff-proro to v0.5.1
+
 ## 0.4.0 (2026-08-09)
 
 - tracks Deputy v0.4.0: REST API authentication and wapp configuration.
