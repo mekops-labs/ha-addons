@@ -29,7 +29,14 @@ whole control plane, so it is deliberately a decision you make rather than a
 default.
 
 The token comes from the `api_token` option, or is generated once into
-`/data/api.token` and logged at startup. Use it as:
+`/data/api.token` and logged at startup. Set your own with any 32+ character
+secret:
+
+```sh
+head -c 32 /dev/urandom | base32   # paste the result into the api_token option
+```
+
+Use it as:
 
 ```sh
 export DEPUTY_SERVER=http://homeassistant.local:8080
@@ -53,6 +60,7 @@ public key must stay stable or provisioned devices reject every desired state.
 
 | Option                                         | Default       | Description
 |------------------------------------------------|---------------|----------------------
+| `api_token`                                    | *(generated)* | Bearer token for the REST API; generated into `/data/api.token` and logged when unset
 | `sync_interval_s`                              | `60`          | Device reconciliation cadence pushed in desired state
 | `oci_insecure`                                 | `false`       | Allow plain-HTTP OCI registries
 | `signing_seed`                                 | *(generated)* | Hex Ed25519 seed (64 chars)
