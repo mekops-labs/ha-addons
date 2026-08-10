@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.6.0 (2026-08-10)
+
+### Added
+
+- `deputy device delete <id>` and `deputy server version`.
+- The twin carries `registry_images` and `registry_image_slots`, published in
+  the retained MQTT state document.
+- The twin carries the device's engine-log tail as `engine_log`, sent only when
+  the device reports a change.
+
+### Changed
+
+- `deputy` with no arguments prints the commands. Serving is `deputy server`.
+- Requires sheriff-proto 0.9.0.
+
 ## 0.5.0 (2026-08-09)
 
 - A layer past 24 KiB is delivered as frames following its delivery message.
