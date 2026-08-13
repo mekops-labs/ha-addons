@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0 (2026-08-13)
+
+### Added
+
+- The twin carries the output of each wapp that has failed, published as
+  `wapp_logs` in the retained MQTT state document.
+
+### Changed
+
+- sheriff-proto v0.10.0
+
 ## 0.6.0 (2026-08-10)
 
 ### Added
