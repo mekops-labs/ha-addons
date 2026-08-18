@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.8.0 (2026-08-18)
+
+### Added
+
+- The device twin carries the capacity a device settled on at boot, in the REST
+  twin, the web UI and the retained MQTT state document.
+- The deploy form checks a desired state against the target's reported limits
+  and names the bound that blocks it.
+- A device running reduced is marked in the web device list and in a STATE
+  column of `deputy device list`.
+- A wapps view at `#/wapps`, listing the wapp versions desired across the fleet
+  and the devices desiring each.
+- The web device page shows the engine's error-channel tail and the output of
+  each wapp that has failed.
+- `deputy device log <id>` prints the same two, sorted by wapp name. It
+  replaces a stub; there is no follow.
+
+### Changed
+
+- `PUT /api/v1/devices/{id}/desired` returns 409 when the desired state exceeds
+  what the target device reported it can hold.
+- sheriff-proto v0.11.0
+
 ## 0.7.0 (2026-08-13)
 
 ### Added
