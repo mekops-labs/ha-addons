@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.9.0 (2026-08-21)
+
+### Added
+
+- Fleet manifests (`internal/manifest`): a YAML/JSON document of deployments,
+  each matched to devices by id or a label selector.
+- `deputy apply -f=<manifest.yaml>` / `POST /api/v1/apply` compile and push
+  each match's desired state, skipping a push that would change nothing.
+- `--dry-run`/`?dry_run=1` reports the per-device diff without pushing;
+  `--require-match`/`?require_match=1` fails a deployment matching no device.
+- `apply --name=<name>` persists a manifest; it re-evaluates on every device
+  registration and label change, so a governed device recovers on its own.
+- `manifest list|show|delete [--prune]` and the matching REST routes.
+- Device labels (`key=value`, grammar-checked, `internal/labels`):
+  `PUT`/`GET /api/v1/devices/{id}/labels`, `GET /api/v1/labels`, a
+  `?selector=k=v[,k2=v2]` filter on the device list, and matching CLI.
+- Wapp catalogue (`internal/catalog`): `POST /api/v1/wapps` / `deputy wapp
+  register` resolves an image once and pre-caches its layers.
+- A push or manifest wapp entry may set `catalog: true` to reference a
+  catalogued wapp instead of naming an image ref inline.
+- `DELETE /api/v1/wapps/{name}/{version}` / `deputy wapp rm` refuses (409)
+  while a device still desires the entry, naming them.
+- Device enrolment: `POST`/`GET /api/v1/devices/enrol` issues a one-use
+  `(device_id, join_token)` pair; `deputy device enrol`.
+- Device decommission: `POST /api/v1/devices/{id}/decommission` pushes the
+  signed wipe instruction; `deputy device decommission`.
+- Web UI: a Manifests view, label editing and a selector filter on the
+  device views, an Enrol view, a wapp catalogue view, and a device Remove
+  section (decommission, then delete).
+- `layercache.FS.Delete`, pinning sheriff-proto v0.13.0.
+
+### Changed
+
+- `DELETE /api/v1/devices/{id}` now revokes the device's secret, and warns
+  in its response when the device was never decommissioned first.
+- `push.Pusher.Push` split into `Compile` (resolve and validate) and
+  `SetDesired`, so `apply` reuses the same compilation path as a push.
+
+### Removed
+
+- The `device revoke` CLI stub — no REST route or protocol message backed
+  it.
+
 ## 0.8.0 (2026-08-18)
 
 ### Added
