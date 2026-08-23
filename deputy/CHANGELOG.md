@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.1 (2026-08-23)
+
+### Fixed
+
+- The five device status entities (wapps running, RAM free, last seen,
+  firmware version, firmware update) publish `entity_category: diagnostic`
+  in the MQTT discovery config.
+
 ## 0.9.0 (2026-08-21)
 
 ### Added
