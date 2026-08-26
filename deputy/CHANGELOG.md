@@ -1,5 +1,77 @@
 # Changelog
 
+## 0.10.0 (2026-08-26)
+
+### Added
+
+- A wapp entry may set `preinstalled: true` where the device already holds the
+  image; a layerless entry is refused without it.
+- Device and wapp lifecycle controls, in the REST API, the CLI and the web UI:
+  restart the device, reload the agent, and restart one wapp. Each queues a
+  signed command the device runs on its next poll, and answers `202` with its
+  sequence rather than reporting the act done. The device must run an agent
+  that polls for commands; against an older one a command stays queued until
+  it expires.
+- `GET /api/v1/devices/{id}/commands` and `deputy device commands` show what is
+  queued but not yet run, so a command to an offline device is visible.
+- A queued command expires if the device does not poll within the command TTL,
+  30 minutes by default.
+- `stop` and `start` hold one wapp down and release it. They set the wapp's
+  `stopped` desired-state flag rather than queueing a command, because an
+  imperative stop would be undone by the device's next reconcile pass. A
+  stopped wapp keeps its slot and its exit code, unlike a removed one.
+- The device page carries the lifecycle controls, a pending-command table, and
+  an "update agent" link that opens the deploy form on the supervisor entry.
+
+### Changed
+
+- Firmware is pushed by OCI ref: `device firmware push --image <host/name:tag>`
+  and `{"firmware":{"image":"…"}}`.
+- The tag names the version; the layer descriptor gives the digest and size.
+  `--version`, `--digest`, `--source` and `--size` are gone, as are the
+  matching fields of a `firmware` push body and a manifest `firmware:` block.
+- A firmware image must be one uncompressed layer. A packaged layer and a ref
+  pinned by digest alone are both refused with `400`.
+- A manifest deployment may declare `wapps`, `firmware`, or both, and governs
+  only the axes it declares. One declaring neither is refused.
+- Desired state is derived from manifests: an imperative change is recorded as
+  the device's own manifest, stored under the reserved name `device:<id>`.
+- `device wapp create|remove`, over new per-wapp device routes, set or drop one
+  wapp and leave the rest of a device's state alone.
+- `apply --name` refuses the `device:` prefix, and a device's own manifest is
+  left out of `manifest list`.
+- The MQTT command topic goes through the same path as the REST routes, so it
+  writes a device manifest and honours the governed-axis refusal.
+- The web UI's deploy form sets one wapp instead of replacing a device's whole
+  wapp set, and names what it leaves alone.
+- `manifest show` prints the document as YAML, the form it is written and
+  re-applied in; `--json` prints the stored record. The manifest route serves
+  the same YAML under `?format=yaml`, and the web UI editor reads it.
+- A wapp's policy (caps, drivers, sockets) and restart policy are shown on the
+  device page, and `GET /api/v1/wapps` carries both.
+
+### Removed
+
+- `device desired-state push`. Its `--file` took a JSON document of a second
+  shape, next to a manifest's; a manifest is now the one document format.
+  Use `device wapp create` for one wapp and `apply -f` for a whole deployment.
+- `wapp rm --from` no longer rewrites a device's whole desired state from the
+  client; it drops the one wapp over the per-wapp route.
+
+### Fixed
+
+- A desired-state push onto an axis a registered manifest governs returns `409`
+  naming that manifest, instead of being accepted and reverted moments later.
+- Applying a firmware-only deployment leaves the device's wapps as they are.
+- `GET /api/v1/devices/{id}` carries a `Governor` object when a manifest
+  governs the device.
+- A firmware version refusal ignores a leading `v` and a `-`/`+` suffix,
+  matching the device's own comparison.
+
+### Build
+
+- Requires sheriff-proto v0.16.1, which publishes the command channel.
+
 ## 0.9.1 (2026-08-23)
 
 ### Fixed
