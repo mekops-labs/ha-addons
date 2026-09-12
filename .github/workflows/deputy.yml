@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "deputy-v*"
+  workflow_dispatch: {}
 
 env:
   ARCHITECTURES: '["amd64", "aarch64"]'
@@ -26,10 +27,12 @@ jobs:
         id: version
         run: |
           version=$(grep -m1 '^version:' deputy/config.yaml | awk '{print $2}' | tr -d '"')
-          tag_version="${GITHUB_REF_NAME#deputy-v}"
-          if [ "$version" != "$tag_version" ]; then
-            echo "config.yaml version ($version) does not match tag $GITHUB_REF_NAME" >&2
-            exit 1
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            tag_version="${GITHUB_REF_NAME#deputy-v}"
+            if [ "$version" != "$tag_version" ]; then
+              echo "config.yaml version ($version) does not match tag $GITHUB_REF_NAME" >&2
+              exit 1
+            fi
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
