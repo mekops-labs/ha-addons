@@ -3,6 +3,7 @@ version: 0.13.0
 slug: "deputy"
 description: "WANTED control plane — manage Sheriff edge devices, with HA MQTT Discovery"
 url: "https://gitlab.com/mekops/wanted/deputy"
+image: "ghcr.io/mekops-labs/deputy"
 arch:
   - aarch64
   - amd64

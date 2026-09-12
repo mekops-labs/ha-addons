@@ -22,6 +22,12 @@ An add-on's version tracks the upstream project it packages, so `deputy-v0.3.0`
 carries Deputy `v0.3.0`. The upstream tag lives in the upstream repository; this
 one marks the packaging.
 
+Pushing a `deputy-v*` tag runs [`.github/workflows/deputy.yml`](.github/workflows/deputy.yml),
+which builds `deputy/Dockerfile` for `amd64` and `aarch64` and publishes it to
+`ghcr.io/mekops-labs/deputy`. The Supervisor pulls that image directly — Deputy's
+`config.yaml` sets `image:`, so it is no longer built on the Home Assistant host.
+Siphon has no such workflow yet and still builds on-host.
+
 ---
 
 ## 🚀 Installation
