@@ -21,9 +21,8 @@ fi
 ARGS+=(--signing-seed "${SEED}")
 
 # --- API token: configured, or generate once and persist in /data ---
-# Deputy refuses to serve its API on a published address without one, and the
-# add-on must publish :8080 for ingress to reach it. The sidebar never needs
-# the token (the Supervisor authenticates the user); a CLI or CI does.
+# Deputy refuses to serve its API on a published address without one. The
+# sidebar needs no token (the Supervisor authenticates); a CLI or CI does.
 TOKEN_FILE=/data/api.token
 if bashio::config.has_value 'api_token'; then
     export DEPUTY_TOKEN="$(bashio::config 'api_token')"

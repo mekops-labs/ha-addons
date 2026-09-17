@@ -17,10 +17,9 @@ init: false
 services:
   - mqtt:want
 
-# Sheriff devices on the LAN talk to the device-protocol port (direct-CBOR
-# framing). The REST API is declared but left unmapped: the sidebar reaches it
-# through ingress, and publishing it is an opt-in that hands the whole control
-# plane to whoever holds the api_token.
+# Sheriff devices reach the device-protocol port directly (direct-CBOR
+# framing). The REST API is left unmapped by default — mapping it is an
+# opt-in that hands the whole control plane to whoever holds the api_token.
 ports:
   8080/tcp: null
   8081/tcp: 8081
