@@ -70,3 +70,5 @@ public key must stay stable or provisioned devices reject every desired state.
 | `mqtt_client_id`                                | `deputy`      | MQTT client id — give each Deputy its own when several share a broker
 | `mqtt_ca_cert`                                  | —             | PEM bundle verifying the broker certificate, for a broker behind a private CA
 | `mqtt_insecure`                                 | `false`       | Accept any broker certificate (lab use only)
+| `manager_address`                               | —             | This Deputy's address, written into an issued provisioning blob's `manager` field
+| `registry_address`                              | —             | The OCI registry's address, written into an issued provisioning blob's `registry` field and defaulted onto a hostless image ref

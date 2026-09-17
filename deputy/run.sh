@@ -84,6 +84,12 @@ fi
 if bashio::config.has_value 'oci_bearer'; then
     export DEPUTY_OCI_BEARER="$(bashio::config 'oci_bearer')"
 fi
+if bashio::config.has_value 'manager_address'; then
+    ARGS+=(--manager-address "$(bashio::config 'manager_address')")
+fi
+if bashio::config.has_value 'registry_address'; then
+    ARGS+=(--registry-address "$(bashio::config 'registry_address')")
+fi
 
 bashio::log.info "Launching Deputy (REST + UI on :8080, Sheriff device protocol on :8081)..."
 exec /usr/bin/deputy "${ARGS[@]}"

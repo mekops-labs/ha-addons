@@ -73,3 +73,10 @@ schema:
   # Accept any broker certificate. Lab use only — this drops the guarantee
   # that the broker is the one intended.
   mqtt_insecure: bool
+  # This Deputy's address, written into an issued provisioning blob's
+  # manager field. Left for the operator to fill in when unset.
+  manager_address: str?
+  # The OCI registry's address, written into an issued provisioning blob's
+  # registry field and defaulted onto a hostless image ref. Left for the
+  # operator to fill in either way when unset.
+  registry_address: str?
