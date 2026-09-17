@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.14.0 (2026-09-17)
+
+### Added
+
+- `manager_address`/`registry_address` options, mapped to Deputy's
+  `--manager-address`/`--registry-address`.
+
+### Build
+
+- Tracks [Deputy v0.14.0](https://gitlab.com/mekops/wanted/deputy/-/blob/v0.14.0/CHANGELOG.md).
+
 ## 0.13.0 (2026-09-12)
 
 ### Build
