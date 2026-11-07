@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.19.2 (2026-11-07)
+
+### Build
+
+- Tracks [Deputy v0.19.2](https://gitlab.com/mekops/wanted/deputy/-/blob/v0.19.2/CHANGELOG.md).
+
 ## 0.19.1 (2026-11-06)
 
 ### Build
